@@ -56,7 +56,7 @@ export default function RegisterSale() {
 
     if (res.ok) {
       setMessage('성공적으로 등록되었습니다! 메인 페이지로 이동합니다.');
-      setTimeout(() => router.push('/'), 2000);
+      setTimeout(() => window.location.href = '/', 2000);
     } else {
       const errorData = await res.json();
       setMessage(`등록 실패: ${errorData.message}`)
