@@ -11,7 +11,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const sales = await redis.get('sales') || [];
+        let sales = await redis.get('sales');
+    if (!Array.isArray(sales)) {
+      sales = [];
+    }
     const initialLength = sales.length;
     const filteredSales = sales.filter(sale => sale.id !== parseInt(id, 10));
 

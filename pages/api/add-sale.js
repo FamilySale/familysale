@@ -7,7 +7,10 @@ export default async function handler(req, res) {
 
   try {
     // 기존 데이터 읽기
-    const currentSales = await redis.get('sales') || [];
+        let currentSales = await redis.get('sales');
+    if (!Array.isArray(currentSales)) {
+      currentSales = [];
+    }
 
     // 새 ID 생성 (가장 큰 ID + 1)
     const maxId = currentSales.reduce((max, sale) => Math.max(max, sale.id), 0);
