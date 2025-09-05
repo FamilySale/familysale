@@ -56,10 +56,10 @@ export default function Home({ sales }) {
   );
 }
 
+import { redis } from '../lib/redis';
+
 export async function getServerSideProps() {
-  // API를 통해 데이터를 가져옵니다.
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales`);
-  let sales = await res.json();
+  let sales = await redis.get('sales');
 
   if (!Array.isArray(sales)) {
     sales = [];
