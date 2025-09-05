@@ -1,8 +1,8 @@
 import { redis } from '../../lib/redis';
 import path from 'path';
-import { promises as fs } from 'fs';
 
 export default async function handler(req, res) {
+  const { promises: fs } = require('fs');
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'GET 요청만 허용됩니다.' });
   }
