@@ -76,26 +76,18 @@ export default function SaleDetail({ sale }) {
   );
 }
 
-async function getSalesData() {
-  const jsonDirectory = path.join(process.cwd(), 'public');
-  const fileContents = await fs.readFile(jsonDirectory + '/sales.json', 'utf8');
-  return JSON.parse(fileContents);
-}
-
-// 동적으로 생성될 페이지의 경로들을 정의합니다.
-export async function getStaticPaths() {
-  const sales = await getSalesData();
-  const paths = sales.map((sale) => ({
-    params: { id: String(sale.id) },
-  }));
-
-  return { paths, fallback: false };
-}
+import { redis } from '../../lib/redis';
 
 // 각 페이지에 필요한 데이터를 가져옵니다.
-export async function getStaticProps({ params }) {
-  const sales = await getSalesData();
+export async function getServerSideProps({ params }) {
+  const sales = await redis.get('sales') || [];
   const sale = sales.find(s => String(s.id) === params.id);
+
+  if (!sale) {
+    return {
+      notFound: true, // sale을 찾지 못하면 404 페이지를 보여줍니다.
+    };
+  }
 
   return {
     props: {

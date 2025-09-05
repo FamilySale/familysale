@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../../components/AdminLayout';
+import { redis } from '../../../lib/redis';
 
 function formatForDatetimeLocal(dateString) {
   if (!dateString) return '';
   const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  // Adjust for time zone offset
+  const timeZoneOffset = date.getTimezoneOffset() * 60000; //in milliseconds
+  const localDate = new Date(date.getTime() - timeZoneOffset);
+  return localDate.toISOString().slice(0, 16);
 }
 
 export async function getServerSideProps(context) {
-  const { req } = context;
+  const { req, params } = context;
   const isAuthenticated = req.cookies['admin-auth'] === 'true';
 
   if (!isAuthenticated) {
@@ -26,56 +25,29 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const sales = await redis.get('sales') || [];
+  const sale = sales.find(s => String(s.id) === params.id);
+
+  if (!sale) {
+    return {
+      notFound: true,
+    };
+  }
+
+  // Format dates for datetime-local input before passing as props
+  sale.saleStartDate = formatForDatetimeLocal(sale.saleStartDate);
+  sale.saleEndDate = formatForDatetimeLocal(sale.saleEndDate);
+
   return {
-    props: {},
+    props: { initialSale: sale },
   };
 }
 
-export default function EditSale() {
+export default function EditSale({ initialSale }) {
   const router = useRouter();
   const { id } = router.query;
-  const [formData, setFormData] = useState({
-    brandName: '',
-    saleTitle: '',
-    saleStartDate: '',
-    saleEndDate: '',
-    locationType: '온라인',
-    onlineLink: '',
-    offlineAddress: '',
-    details: '',
-  });
-  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState(initialSale);
   const [message, setMessage] = useState('');
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (id) {
-      async function fetchSale() {
-        try {
-          const res = await fetch('/sales.json'); // Fetch all sales
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          const data = await res.json();
-          const saleToEdit = data.find(sale => sale.id === parseInt(id, 10));
-
-          if (saleToEdit) {
-            // Format dates for datetime-local input
-            saleToEdit.saleStartDate = formatForDatetimeLocal(saleToEdit.saleStartDate);
-            saleToEdit.saleEndDate = formatForDatetimeLocal(saleToEdit.saleEndDate);
-            setFormData(saleToEdit);
-          } else {
-            setError('세일 정보를 찾을 수 없습니다.');
-          }
-        } catch (e) {
-          setError(e.message);
-        } finally {
-          setLoading(false);
-        }
-      }
-      fetchSale();
-    }
-  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

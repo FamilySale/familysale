@@ -56,14 +56,14 @@ export default function Home({ sales }) {
   );
 }
 
-import path from 'path';
-import { promises as fs } from 'fs';
+export async function getServerSideProps() {
+  // API를 통해 데이터를 가져옵니다.
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/sales`);
+  let sales = await res.json();
 
-export async function getStaticProps() {
-  // 파일 시스템에서 직접 JSON 파일을 읽어옵니다.
-  const jsonDirectory = path.join(process.cwd(), 'public');
-  const fileContents = await fs.readFile(jsonDirectory + '/sales.json', 'utf8');
-  const sales = JSON.parse(fileContents);
+  if (!Array.isArray(sales)) {
+    sales = [];
+  }
 
   // 등록된 순서 (ID 내림차순)로 정렬
   sales.sort((a, b) => b.id - a.id);
