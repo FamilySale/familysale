@@ -57,8 +57,8 @@ export default function RegisterList() {
           throw new Error(errorData.message || '삭제 실패');
         }
 
-        setSales(sales.filter(sale => sale.id !== id));
         alert('세일 정보가 성공적으로 삭제되었습니다.');
+        window.location.reload();
       } catch (e) {
         alert(`삭제 실패: ${e.message}`);
       }
