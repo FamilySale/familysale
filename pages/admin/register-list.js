@@ -1,8 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AdminLayout from '../../components/AdminLayout';
-import path from 'path';
-import { promises as fs } from 'fs';
 
 export async function getServerSideProps(context) {
   const { req } = context;
@@ -16,19 +14,36 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
-  const jsonDirectory = path.join(process.cwd(), 'public');
-  const fileContents = await fs.readFile(jsonDirectory + '/sales.json', 'utf8');
-  const sales = JSON.parse(fileContents);
-  sales.sort((a, b) => b.id - a.id);
-
+  
   return {
-    props: { initialSales: sales },
+    props: {},
   };
 }
 
-export default function RegisterList({ initialSales }) {
-  const [sales, setSales] = useState(initialSales);
+export default function RegisterList() {
+  const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSales = async () => {
+      try {
+        const res = await fetch('/api/sales');
+        if (!res.ok) {
+          throw new Error('데이터를 불러오는 데 실패했습니다.');
+        }
+        const data = await res.json();
+        data.sort((a, b) => b.id - a.id); // ID 기준 내림차순 정렬
+        setSales(data);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSales();
+  }, []);
 
   const handleDelete = async (id) => {
     if (window.confirm('정말로 이 세일 정보를 삭제하시겠습니까?')) {
