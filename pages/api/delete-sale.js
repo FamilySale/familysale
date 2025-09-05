@@ -1,5 +1,4 @@
-import path from 'path';
-import { promises as fs } from 'fs';
+import { redis } from '../../lib/redis';
 
 export default async function handler(req, res) {
   if (req.method !== 'DELETE') {
@@ -11,22 +10,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: '삭제할 세일의 ID가 필요합니다.' });
   }
 
-  const jsonDirectory = path.join(process.cwd(), 'public');
-  const filePath = jsonDirectory + '/sales.json';
-
   try {
-    const fileContents = await fs.readFile(filePath, 'utf8');
-    let sales = JSON.parse(fileContents);
-
+    const sales = await redis.get('sales') || [];
     const initialLength = sales.length;
-    sales = sales.filter(sale => sale.id !== parseInt(id, 10)); // Filter out the sale
+    const filteredSales = sales.filter(sale => sale.id !== parseInt(id, 10));
 
-    if (sales.length === initialLength) {
-      // If length hasn't changed, ID was not found
+    if (filteredSales.length === initialLength) {
       return res.status(404).json({ message: '해당 ID의 세일 정보를 찾을 수 없습니다.' });
     }
 
-    await fs.writeFile(filePath, JSON.stringify(sales, null, 2));
+    await redis.set('sales', filteredSales);
 
     res.status(200).json({ message: '세일 정보가 성공적으로 삭제되었습니다.' });
 

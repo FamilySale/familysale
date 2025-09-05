@@ -1,21 +1,16 @@
-import path from 'path';
-import { promises as fs } from 'fs';
+import { redis } from '../../lib/redis';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'POST 요청만 허용됩니다.' });
   }
 
-  const jsonDirectory = path.join(process.cwd(), 'public');
-  const filePath = jsonDirectory + '/sales.json';
-
   try {
     // 기존 데이터 읽기
-    const fileContents = await fs.readFile(filePath, 'utf8');
-    const sales = JSON.parse(fileContents);
+    const currentSales = await redis.get('sales') || [];
 
     // 새 ID 생성 (가장 큰 ID + 1)
-    const maxId = sales.reduce((max, sale) => Math.max(max, sale.id), 0);
+    const maxId = currentSales.reduce((max, sale) => Math.max(max, sale.id), 0);
     const newId = maxId + 1;
 
     // 새 데이터 추가
@@ -30,10 +25,10 @@ export default async function handler(req, res) {
       offlineAddress: req.body.offlineAddress,
       details: req.body.details,
     };
-    sales.push(newSale);
+    const updatedSales = [...currentSales, newSale];
 
-    // 파일에 다시 쓰기
-    await fs.writeFile(filePath, JSON.stringify(sales, null, 2));
+    // Redis에 다시 쓰기
+    await redis.set('sales', updatedSales);
 
     res.status(200).json({ message: '성공적으로 등록되었습니다.', newSale });
 

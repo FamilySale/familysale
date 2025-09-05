@@ -1,14 +1,18 @@
-import path from 'path';
-import { promises as fs } from 'fs';
+import { redis } from '../../lib/redis';
 
 export default async function handler(req, res) {
-  // public 디렉터리의 sales.json 파일 경로를 찾습니다.
-  const jsonDirectory = path.join(process.cwd(), 'public');
-  // sales.json 파일의 내용을 읽어옵니다.
-  const fileContents = await fs.readFile(jsonDirectory + '/sales.json', 'utf8');
-  // JSON으로 파싱합니다.
-  const salesData = JSON.parse(fileContents);
+  try {
+    // Redis에서 'sales' 키의 값을 가져옵니다.
+    const sales = await redis.get('sales');
 
-  // 200 OK 상태 코드와 함께 JSON 데이터를 응답합니다.
-  res.status(200).json(salesData);
+    // 데이터가 없으면 빈 배열을 반환합니다.
+    if (!sales) {
+      return res.status(200).json([]);
+    }
+
+    // 가져온 데이터(JSON 문자열)를 객체로 파싱하여 반환합니다.
+    res.status(200).json(sales);
+  } catch (error) {
+    res.status(500).json({ message: '데이터를 가져오는 중 오류가 발생했습니다.', error: error.message });
+  }
 }

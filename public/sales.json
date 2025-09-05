@@ -80,17 +80,6 @@
     "locationType": "온라인",
     "onlineLink": "https://example.com/sale/leather-special",
     "offlineAddress": "",
-    "details": "dd"
-  },
-  {
-    "id": 9,
-    "brandName": "ff",
-    "saleTitle": "ff",
-    "saleStartDate": "2025-09-04T13:28",
-    "saleEndDate": "2025-09-12T01:28",
-    "locationType": "온라인",
-    "onlineLink": "https://family.pond-group.com/code",
-    "offlineAddress": "",
-    "details": "ddd"
+    "details": "dddddzzz"
   }
 ]
