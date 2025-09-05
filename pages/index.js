@@ -58,7 +58,8 @@ export default function Home({ sales }) {
 
 import { redis } from '../lib/redis';
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ res }) {
+  res.setHeader('Cache-Control', 'no-store');
   let sales = await redis.get('sales');
 
   if (!Array.isArray(sales)) {
