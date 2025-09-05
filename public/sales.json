@@ -1,0 +1,96 @@
+[
+  {
+    "id": 2,
+    "brandName": "캐시미어 하우스",
+    "saleTitle": "겨울 준비, 니트웨어 페스티벌",
+    "saleStartDate": "2025-09-05T10:00",
+    "saleEndDate": "2025-09-20T20:00",
+    "locationType": "오프라인",
+    "onlineLink": null,
+    "offlineAddress": "서울특별시 강남구 테헤란로 123 패밀리백화점 3층",
+    "details": "부드러운 촉감의 100% 캐시미어 스웨터와 머플러. 백화점 방문 고객 한정 30% 할인.",
+    "imageUrl": "https://via.placeholder.com/500x500.png?text=AI+Image+2"
+  },
+  {
+    "id": 3,
+    "brandName": "데일리 데님",
+    "saleTitle": "청바지 전 품목 1+1",
+    "saleStartDate": "2025-09-10T00:00:00",
+    "saleEndDate": "2025-09-25T23:59:59",
+    "locationType": "온라인",
+    "onlineLink": "https://example.com/sale/denim-1plus1",
+    "offlineAddress": null,
+    "details": "어떤 스타일에도 잘 어울리는 데일리 데님 팬츠. 친구와 함께, 연인과 함께 입을 수 있는 1+1 찬스.",
+    "imageUrl": "https://via.placeholder.com/500x500.png?text=AI+Image+3"
+  },
+  {
+    "id": 4,
+    "brandName": "엘레강스 실크",
+    "saleTitle": "오피스 레이디를 위한 실크 블라우스전",
+    "saleStartDate": "2025-09-01T10:00:00",
+    "saleEndDate": "2025-09-15T18:00:00",
+    "locationType": "오프라인",
+    "onlineLink": null,
+    "offlineAddress": "경기도 성남시 분당구 판교역로 456 ABC 아울렛 1층",
+    "details": "우아하고 세련된 실크 블라우스를 합리적인 가격에. 직장인을 위한 특별 프로모션.",
+    "imageUrl": "https://via.placeholder.com/500x500.png?text=AI+Image+4"
+  },
+  {
+    "id": 5,
+    "brandName": "test_brand",
+    "saleTitle": "sale_title",
+    "saleStartDate": "2025-09-04T10:00",
+    "saleEndDate": "2025-09-10T00:00",
+    "locationType": "온라인",
+    "onlineLink": "https://www.naver.com",
+    "offlineAddress": "",
+    "details": "test_detail",
+    "imageUrl": "https://www.naver.com"
+  },
+  {
+    "id": 6,
+    "brandName": "최진섭",
+    "saleTitle": "최진섭",
+    "saleStartDate": "2025-09-03T14:41",
+    "saleEndDate": "2025-09-24T14:41",
+    "locationType": "온라인",
+    "onlineLink": "https://www.naver.com",
+    "offlineAddress": "",
+    "details": "asdfqwerzxvf",
+    "imageUrl": "https://naver.com",
+    "sortOrder": "1"
+  },
+  {
+    "id": 7,
+    "brandName": "캘빈클라인, 푸마바디웨어, 라코스테, 카파골프 등",
+    "saleTitle": "폰드그룹 임직원 브랜드 특별전 UP TO 95%",
+    "saleStartDate": "2025-08-31T15:00",
+    "saleEndDate": "2025-09-03T07:00",
+    "locationType": "온라인",
+    "onlineLink": "https://family.pond-group.com/code",
+    "offlineAddress": "",
+    "details": "입장코드 : POND\n\n※ 회원가입 및 로그인 후 이용 가능합니다.\n※ 상품마다 재고가 많지 않은 점 양해 바라며, 주요 상품 품절 시 패밀리세일 종료될 수 있습니다."
+  },
+  {
+    "id": 8,
+    "brandName": "시간 테스트",
+    "saleTitle": "UTC+9",
+    "saleStartDate": "2025-09-01T00:00",
+    "saleEndDate": "2025-09-04T23:59",
+    "locationType": "온라인",
+    "onlineLink": "https://example.com/sale/leather-special",
+    "offlineAddress": "",
+    "details": "dd"
+  },
+  {
+    "id": 9,
+    "brandName": "ff",
+    "saleTitle": "ff",
+    "saleStartDate": "2025-09-04T13:28",
+    "saleEndDate": "2025-09-12T01:28",
+    "locationType": "온라인",
+    "onlineLink": "https://family.pond-group.com/code",
+    "offlineAddress": "",
+    "details": "ddd"
+  }
+]
