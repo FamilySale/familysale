@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import path from 'path';
-import { promises as fs } from 'fs';
 import Countdown from '../../components/Countdown';
 import Footer from '../../components/Footer';
 
