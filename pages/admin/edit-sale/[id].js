@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AdminLayout from '../../../components/AdminLayout';
 import { redis } from '../../../lib/redis';
@@ -34,10 +34,6 @@ export async function getServerSideProps(context) {
     };
   }
 
-  // Format dates for datetime-local input before passing as props
-  sale.saleStartDate = formatForDatetimeLocal(sale.saleStartDate);
-  sale.saleEndDate = formatForDatetimeLocal(sale.saleEndDate);
-
   return {
     props: { initialSale: sale },
   };
@@ -46,8 +42,18 @@ export async function getServerSideProps(context) {
 export default function EditSale({ initialSale }) {
   const router = useRouter();
   const { id } = router.query;
-  const [formData, setFormData] = useState(initialSale);
+  const [formData, setFormData] = useState(null);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (initialSale) {
+      setFormData({
+        ...initialSale,
+        saleStartDate: formatForDatetimeLocal(initialSale.saleStartDate),
+        saleEndDate: formatForDatetimeLocal(initialSale.saleEndDate),
+      });
+    }
+  }, [initialSale]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,9 +88,7 @@ export default function EditSale({ initialSale }) {
     }
   };
 
-  if (loading) return <div className="container mt-5">로딩 중...</div>;
-  if (error) return <div className="container mt-5 text-danger">오류 발생: {error}</div>;
-  if (!formData.brandName && !loading) return <div className="container mt-5">세일 정보를 찾을 수 없습니다.</div>; // If not found after loading
+  if (!formData) return <div className="container mt-5">로딩 중...</div>;
 
   return (
     <AdminLayout>
