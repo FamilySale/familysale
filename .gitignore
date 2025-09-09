@@ -26,3 +26,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
+
+# data files
+visitor_count.json
