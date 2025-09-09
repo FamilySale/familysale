@@ -1,28 +1,22 @@
 
-import fs from 'fs';
-import path from 'path';
+import { redis } from '../../lib/redis';
 
-export default function handler(req, res) {
-  const filePath = path.join(process.cwd(), 'visitor_count.json');
-  
-  fs.readFile(filePath, 'utf8', (err, data) => {
+export default async function handler(req, res) {
+  try {
+    const data = await redis.get('visitor_stats');
     let stats;
-    if (err) {
-      if (err.code === 'ENOENT') {
-        // If the file doesn't exist, create it with initial stats
-        stats = {
-          total: 1,
-          today: {
-            date: new Date().toISOString().split('T')[0],
-            count: 1,
-          },
-        };
-      } else {
-        console.error(err);
-        return res.status(500).json({ error: 'Error reading visitor count file' });
-      }
+
+    if (!data) {
+      // If no data in Redis, initialize stats
+      stats = {
+        total: 1,
+        today: {
+          date: new Date().toISOString().split('T')[0],
+          count: 1,
+        },
+      };
     } else {
-      // If the file exists, parse the data and update stats
+      // If data exists, parse it and update
       stats = JSON.parse(data);
       const today = new Date().toISOString().split('T')[0];
 
@@ -36,16 +30,15 @@ export default function handler(req, res) {
       }
     }
 
-    fs.writeFile(filePath, JSON.stringify(stats, null, 2), (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: 'Error writing visitor count file' });
-      }
+    // Save the updated stats back to Redis
+    await redis.set('visitor_stats', JSON.stringify(stats));
 
-      res.status(200).json({
-        total: stats.total,
-        today: stats.today.count,
-      });
+    res.status(200).json({
+      total: stats.total,
+      today: stats.today.count,
     });
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error handling visitor count' });
+  }
 }
