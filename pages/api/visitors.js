@@ -16,8 +16,12 @@ export default async function handler(req, res) {
         },
       };
     } else {
-      // If data exists, parse it and update
-      stats = JSON.parse(data);
+      // If data exists, parse it if it's a string, otherwise use it directly
+      if (typeof data === 'string') {
+        stats = JSON.parse(data);
+      } else {
+        stats = data;
+      }
       const today = new Date().toISOString().split('T')[0];
 
       stats.total += 1;
