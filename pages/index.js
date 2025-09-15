@@ -16,6 +16,11 @@ function formatDateTime(dateString) {
 import Footer from '../components/Footer';
 
 export default function Home({ sales }) {
+  const addToFavorites = (e) => {
+    e.preventDefault();
+    alert('Ctrl+D 또는 Command+D를 눌러 이 페이지를 즐겨찾기에 추가하세요.');
+  };
+
   return (
     <div className="container mt-4">
       <Head>
@@ -25,6 +30,11 @@ export default function Home({ sales }) {
       </Head>
 
       <main>
+        <div className="d-flex justify-content-end mb-2">
+          <a href="#" onClick={addToFavorites} className="text-dark" style={{ textDecoration: 'underline', cursor: 'pointer' }}>
+            북마크추가
+          </a>
+        </div>
         <div className="text-center mb-4">
           <img src="/logo.jpg" alt="Family Sale Logo" style={{ maxWidth: '250px', height: 'auto', width: '100%' }} />
         </div>
