@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -16,6 +17,26 @@ function formatDateTime(dateString) {
 import Footer from '../components/Footer';
 
 export default function Home({ sales }) {
+  const [sortCriterion, setSortCriterion] = useState('registration'); // 'registration' or 'endDate'
+  const [displayedSales, setDisplayedSales] = useState([]);
+
+  useEffect(() => {
+    let sorted = [...sales];
+
+    if (sortCriterion === 'registration') {
+      // Default sort by ID descending (registration order)
+      sorted.sort((a, b) => b.id - a.id);
+    } else if (sortCriterion === 'endDate') {
+      // Sort by saleEndDate descending (latest end date first)
+      sorted.sort((a, b) => new Date(b.saleEndDate).getTime() - new Date(a.saleEndDate).getTime());
+    }
+    setDisplayedSales(sorted);
+  }, [sales, sortCriterion]);
+
+  const handleSortChange = (event) => {
+    setSortCriterion(event.target.value);
+  };
+
   const addToFavorites = (e) => {
     e.preventDefault();
     alert('Ctrl+D 또는 Command+D를 눌러 이 페이지를 즐겨찾기에 추가하세요.');
@@ -30,17 +51,21 @@ export default function Home({ sales }) {
       </Head>
 
       <main>
-        <div className="d-flex justify-content-end mb-2">
+        <div className="d-flex justify-content-between align-items-center mb-2">
           <a href="#" onClick={addToFavorites} className="text-dark" style={{ textDecoration: 'underline', cursor: 'pointer' }}>
             북마크추가
           </a>
+          <select className="form-select form-select-sm w-auto" onChange={handleSortChange} value={sortCriterion}>
+            <option value="registration">등록일순</option>
+            <option value="endDate">종료일순</option>
+          </select>
         </div>
         <div className="text-center mb-4">
           <img src="/logo.jpg" alt="Family Sale Logo" style={{ maxWidth: '250px', height: 'auto', width: '100%' }} />
         </div>
 
         <div className="row">
-          {sales.map((sale) => (
+          {displayedSales.map((sale) => (
             <div key={sale.id} className="col-12 mb-4">
               <Link href={`/sales/${sale.id}`} passHref>
                 <div className="card h-100" style={{ cursor: 'pointer' }}>
