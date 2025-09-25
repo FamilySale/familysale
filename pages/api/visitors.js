@@ -22,7 +22,23 @@ export default async function handler(req, res) {
       } else {
         stats = data;
       }
-      const today = new Date().toISOString().split('T')[0];
+      const now = new Date();
+      const year = now.getUTCFullYear();
+      const month = now.getUTCMonth();
+      const day = now.getUTCDate();
+
+      // Create a UTC date object for the start of the current UTC day
+      const utcToday = new Date(Date.UTC(year, month, day));
+
+      // Add 9 hours to get the KST equivalent
+      utcToday.setUTCHours(utcToday.getUTCHours() + 9);
+
+      // Now, format this adjusted date to YYYY-MM-DD
+      const kstYear = utcToday.getUTCFullYear();
+      const kstMonth = (utcToday.getUTCMonth() + 1).toString().padStart(2, '0');
+      const kstDay = utcToday.getUTCDate().toString().padStart(2, '0');
+
+      const today = `${kstYear}-${kstMonth}-${kstDay}`;
 
       stats.total += 1;
 
