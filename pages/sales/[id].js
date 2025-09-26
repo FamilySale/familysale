@@ -38,6 +38,10 @@ export default function SaleDetail({ sale }) {
       <Head>
         <title>{sale.saleTitle} - Family Sale</title>
         <meta name="description" content={sale.details} />
+        <meta property="og:title" content={sale.saleTitle} />
+        <meta property="og:description" content={`브랜드: ${sale.brandName} | 기간: ${formatDateTime(sale.saleStartDate)} ~ ${formatDateTime(sale.saleEndDate)}`} />
+        <meta property="og:url" content={`https://familysale.vercel.app/sales/${sale.id}`} />
+        <meta property="og:image" content="https://familysale.vercel.app/logo.jpg" />
       </Head>
 
       <div className="mb-3 d-flex justify-content-end">
