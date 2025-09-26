@@ -19,6 +19,16 @@ function formatDateTime(dateString) {
 export default function SaleDetail({ sale }) {
   const router = useRouter();
 
+  const copyUrlToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert('본 페이지의 URL을 복사했습니다. 원하는 곳에 붙여넣어 주세요.');
+    } catch (err) {
+      console.error('URL 복사에 실패했습니다.', err);
+      alert('URL 복사에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
@@ -50,13 +60,16 @@ export default function SaleDetail({ sale }) {
               <Countdown endDate={sale.saleEndDate} />
             </p>
             
-            {sale.locationType === '온라인' && sale.onlineLink && (
-                <p>
+            <div className="d-flex gap-2 mb-3">
+              {sale.locationType === '온라인' && sale.onlineLink && (
                   <a href={sale.onlineLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
                     온라인 스토어 바로가기
                   </a>
-                </p>
-            )}
+              )}
+              <button onClick={copyUrlToClipboard} className="btn btn-secondary">
+                공유하기
+              </button>
+            </div>
 
             {sale.locationType === '오프라인' && sale.offlineAddress && (
                 <p>{sale.offlineAddress}</p>
