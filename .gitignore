@@ -29,3 +29,4 @@ yarn-error.log*
 
 # data files
 visitor_count.json
+pages/api/debug-env.js
